@@ -27,4 +27,24 @@ public class GoldenSourceTest {
         assertEquals(9, items[0].sellIn);
     }
 
+
+    @Test
+    void update_one_day_aged_brie_with_sellin_2_and_quality_0_should_decrement_sellin() {
+        Item[] items = new Item[]{new Item("Aged Brie", 2, 0)};
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+
+        assertEquals(1, items[0].sellIn);
+    }
+    @Test
+    void update_one_day_aged_brie_with_sellin_2_and_quality_0_should_increment_quality() {
+        Item[] items = new Item[]{new Item("Aged Brie", 2, 0)};
+        GildedRose app = new GildedRose(items);
+        app.updateQuality();
+
+        assertEquals(1, items[0].sellIn);
+    }
+
+
+
 }

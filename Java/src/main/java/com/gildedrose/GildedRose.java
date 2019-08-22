@@ -14,58 +14,81 @@ class GildedRose {
 
     public void updateQuality() {
         for (int itemIndex = 0; itemIndex < items.length; itemIndex++) {
-            if (!items[itemIndex].name.equals(AGED_BRIE)
-                    && !items[itemIndex].name.equals(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT)) {
-                if (items[itemIndex].quality > MIN_QUALITY) {
-                    if (!SULFURAS_HAND_OF_RAGNAROS.equals(items[itemIndex].name)) {
-                        items[itemIndex].quality = items[itemIndex].quality - 1;
-                    }
+            Item item = items[itemIndex];
+            updateItem(item);
+        }
+    }
+
+    private void updateItem(Item item) {
+        String name = item.name;
+        if (!isAgedBrie(name)
+                && !isBackstagePasses(name)) {
+            if (item.quality > MIN_QUALITY) {
+                if (!isSulfuras(name)) {
+                    decrementQuality(item);
                 }
-            } else {
-                if (items[itemIndex].quality < MAX_QUALITY) {
-                    incrementQuality(itemIndex);
+            }
+        } else {
+            if (item.quality < MAX_QUALITY) {
+                incrementQuality(item);
 
-                    if (items[itemIndex].name.equals(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT)) {
-                        if (items[itemIndex].sellIn < 11) {
-                            if (items[itemIndex].quality < MAX_QUALITY) {
-                                incrementQuality(itemIndex);
-                            }
+                if (isBackstagePasses(name)) {
+                    if (item.sellIn < 11) {
+                        if (item.quality < MAX_QUALITY) {
+                            incrementQuality(item);
                         }
+                    }
 
-                        if (items[itemIndex].sellIn < 6) {
-                            if (items[itemIndex].quality < MAX_QUALITY) {
-                                incrementQuality(itemIndex);
-                            }
+                    if (item.sellIn < 6) {
+                        if (item.quality < MAX_QUALITY) {
+                            incrementQuality(item);
                         }
                     }
                 }
             }
+        }
 
-            if (!items[itemIndex].name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
-                items[itemIndex].sellIn = items[itemIndex].sellIn - 1;
-            }
+        if (!isSulfuras(name)) {
+            item.sellIn = item.sellIn - 1;
+        }
 
-            if (items[itemIndex].sellIn < 0) {
-                if (!items[itemIndex].name.equals(AGED_BRIE)) {
-                    if (!items[itemIndex].name.equals(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT)) {
-                        if (items[itemIndex].quality > MIN_QUALITY) {
-                            if (!items[itemIndex].name.equals(SULFURAS_HAND_OF_RAGNAROS)) {
-                                items[itemIndex].quality = items[itemIndex].quality - 1;
-                            }
+        if (item.sellIn < 0) {
+            if (!isAgedBrie(name)) {
+                if (!isBackstagePasses(name)) {
+                    if (item.quality > MIN_QUALITY) {
+                        if (!isSulfuras(name)) {
+                            decrementQuality(item);
                         }
-                    } else {
-                        items[itemIndex].quality = 0;
                     }
                 } else {
-                    if (items[itemIndex].quality < MAX_QUALITY) {
-                        incrementQuality(itemIndex);
-                    }
+                    item.quality = 0;
+                }
+            } else {
+                if (item.quality < MAX_QUALITY) {
+                    incrementQuality(item);
                 }
             }
         }
     }
 
-    private void incrementQuality(int i) {
-        items[i].quality = items[i].quality + 1;
+    private boolean isAgedBrie(String name) {
+        return name.equals(AGED_BRIE);
     }
+
+    private boolean isSulfuras(String name) {
+        return name.equals(SULFURAS_HAND_OF_RAGNAROS);
+    }
+
+    private boolean isBackstagePasses(String name) {
+        return name.equals(BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT);
+    }
+
+    private void incrementQuality(Item item) {
+        item.quality = item.quality + 1;
+    }
+
+    private void decrementQuality(Item item) {
+        item.quality = item.quality - 1;
+    }
+
 }

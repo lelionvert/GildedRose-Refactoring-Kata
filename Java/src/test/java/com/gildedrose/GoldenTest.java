@@ -1,6 +1,5 @@
 package com.gildedrose;
 
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +18,6 @@ public class GoldenTest {
         Assertions.assertEquals(getGloden(), out.toString());
     }
     private String getGloden() throws IOException {
-        return String.join("\n", Files.readAllLines(Paths.get("golden.txt"))) + "\n";
+        return String.join("\r\n", Files.readAllLines(Paths.get("golden.txt"))) + "\r\n";
     }
 }

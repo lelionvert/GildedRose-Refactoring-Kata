@@ -8,13 +8,14 @@ class GildedRose {
     public static final int MIN_QUALITY = 0;
     public static final int INCREASE_QUALITY_TEN_DAY_LIMIT = 11;
     public static final int INCREASE_QUALITY_FIVE_DAY_LIMIT = 6;
+    public static final int SELLIN_MIN = 0;
     Item[] items;
 
     public GildedRose(Item[] items) {
         this.items = items;
     }
 
-    public void updateQuality() {
+    public void updateItems() {
         for (int itemIndex = 0; itemIndex < items.length; itemIndex++) {
             Item item = items[itemIndex];
             updateItem(item);
@@ -22,34 +23,47 @@ class GildedRose {
     }
 
     private void updateItem(Item item) {
-        String name = item.name;
-        if (!isAgedBrie(name)
-                && !isBackstagePasses(name) && !isSulfuras(name)) {
-            decrementNotMinimumQuality(item);
-        } else {
+        updateSellin(item);
+        updateQuality(item);
+    }
+
+    private void updateQuality(Item item) {
+        if (isAgedBrie(item.name)) {
             if (item.quality < MAX_QUALITY) {
                 incrementQuality(item);
-                updateBackstagePassesQuality(item, name);
             }
-        }
-
-        if (!isSulfuras(name)) {
-            item.sellIn = item.sellIn - 1;
-        }
-
-        if (item.sellIn < 0) {
-            if (!isAgedBrie(name)) {
-                if (isBackstagePasses(name))
-                    resetQuality(item);
+        } else if (isBackstagePasses(item.name)) {
+            if (item.quality < MAX_QUALITY) {
+                incrementQuality(item);
+                updateBackstagePassesQuality(item, item.name);
             }
-
-            if (!isAgedBrie(name) && !isBackstagePasses(name) && !isSulfuras(name)) {
+        } else {
+            if (!isSulfuras(item.name)) {
                 decrementNotMinimumQuality(item);
-            } else {
+            }
+
+        }
+
+        if (item.sellIn < SELLIN_MIN) {
+            if (isAgedBrie(item.name)) {
                 if (item.quality < MAX_QUALITY) {
                     incrementQuality(item);
                 }
+            } else {
+                if (isBackstagePasses(item.name))
+                    resetQuality(item);
+
+                if (!isBackstagePasses(item.name) && !isSulfuras(item.name)) {
+                    decrementNotMinimumQuality(item);
+                }
             }
+
+        }
+    }
+
+    private void updateSellin(Item item) {
+        if (!isSulfuras(item.name)) {
+            item.sellIn = item.sellIn - 1;
         }
     }
 

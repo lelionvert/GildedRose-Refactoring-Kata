@@ -6,6 +6,8 @@ class GildedRose {
     public static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
     public static final int MAX_QUALITY = 50;
     public static final int MIN_QUALITY = 0;
+    public static final int INCREASE_QUALITY_TEN_DAY_LIMIT = 11;
+    public static final int INCREASE_QUALITY_FIVE_DAY_LIMIT = 6;
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -32,19 +34,7 @@ class GildedRose {
             if (item.quality < MAX_QUALITY) {
                 incrementQuality(item);
 
-                if (isBackstagePasses(name)) {
-                    if (item.sellIn < 11) {
-                        if (item.quality < MAX_QUALITY) {
-                            incrementQuality(item);
-                        }
-                    }
-
-                    if (item.sellIn < 6) {
-                        if (item.quality < MAX_QUALITY) {
-                            incrementQuality(item);
-                        }
-                    }
-                }
+                updateBackstagePassesQuality(item, name);
             }
         }
 
@@ -61,7 +51,7 @@ class GildedRose {
                         }
                     }
                 } else {
-                    item.quality = 0;
+                    resetQuality(item);
                 }
             } else {
                 if (item.quality < MAX_QUALITY) {
@@ -69,6 +59,26 @@ class GildedRose {
                 }
             }
         }
+    }
+
+    private void updateBackstagePassesQuality(Item item, String name) {
+        if (isBackstagePasses(name)) {
+            if (item.sellIn < INCREASE_QUALITY_TEN_DAY_LIMIT) {
+                if (item.quality < MAX_QUALITY) {
+                    incrementQuality(item);
+                }
+            }
+
+            if (item.sellIn < INCREASE_QUALITY_FIVE_DAY_LIMIT) {
+                if (item.quality < MAX_QUALITY) {
+                    incrementQuality(item);
+                }
+            }
+        }
+    }
+
+    private void resetQuality(Item item) {
+        item.quality = 0;
     }
 
     private boolean isAgedBrie(String name) {

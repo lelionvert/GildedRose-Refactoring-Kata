@@ -61,11 +61,6 @@ public class GoldenSourceTest {
         assertEquals(18, items[0].quality);
     }
 
-
-
-
-
-
     @Test
     void update_one_day_dexterity_vest_with_sellin_10_and_quality_20_should_decrement_quality() {
         Item[] items = new Item[]{new Item("+5 Dexterity Vest", 10, 20)};

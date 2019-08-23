@@ -28,31 +28,42 @@ class GildedRose {
     }
 
     private void updateQuality(Item item) {
+        if (isSulfuras(item.name)) {
+            return;
+        }
         if (isAgedBrie(item.name)) {
-            if (item.quality < MAX_QUALITY) {
-                incrementQuality(item);
-            }
-        } else if (isBackstagePasses(item.name)) {
-            if (item.quality < MAX_QUALITY) {
-                incrementQuality(item);
-                updateBackstagePassesQuality(item, item.name);
-            }
-        } else if (!isSulfuras(item.name)) {
+            updateAgedBrie(item);
+            return;
+        }
+        if (isBackstagePasses(item.name)) {
+            updateBackstagePasses(item);
+            return;
+        }
+        updateStandardItem(item);
+    }
+
+    private void updateStandardItem(Item item) {
+        decrementNotMinimumQuality(item);
+        if (item.sellIn < SELLIN_MIN)
             decrementNotMinimumQuality(item);
-        }
+    }
 
-
-        if (item.sellIn < SELLIN_MIN) {
-            if (isAgedBrie(item.name)) {
-                if (item.quality < MAX_QUALITY) {
-                    incrementQuality(item);
-                }
-            } else if (isBackstagePasses(item.name)) {
-                resetQuality(item);
-            } else if (!isSulfuras(item.name)) {
-                decrementNotMinimumQuality(item);
-            }
+    private void updateBackstagePasses(Item item) {
+        if (item.quality < MAX_QUALITY) {
+            incrementQuality(item);
+            updateBackstagePassesQuality(item, item.name);
         }
+        if (item.sellIn < SELLIN_MIN)
+            resetQuality(item);
+    }
+
+    private void updateAgedBrie(Item item) {
+        if (item.quality < MAX_QUALITY) {
+            incrementQuality(item);
+            if (item.sellIn < SELLIN_MIN)
+                incrementQuality(item);
+        }
+        return;
     }
 
     private void updateSellin(Item item) {

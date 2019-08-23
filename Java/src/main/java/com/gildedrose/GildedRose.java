@@ -1,14 +1,14 @@
 package com.gildedrose;
 
 class GildedRose {
-    public static final String AGED_BRIE = "Aged Brie";
-    public static final String BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT = "Backstage passes to a TAFKAL80ETC concert";
-    public static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
-    public static final int MAX_QUALITY = 50;
-    public static final int MIN_QUALITY = 0;
-    public static final int INCREASE_QUALITY_TEN_DAY_LIMIT = 11;
-    public static final int INCREASE_QUALITY_FIVE_DAY_LIMIT = 6;
-    public static final int SELLIN_MIN = 0;
+    private static final String AGED_BRIE = "Aged Brie";
+    private static final String BACKSTAGE_PASSES_TO_A_TAFKAL_80_ETC_CONCERT = "Backstage passes to a TAFKAL80ETC concert";
+    private static final String SULFURAS_HAND_OF_RAGNAROS = "Sulfuras, Hand of Ragnaros";
+    private static final int MAX_QUALITY = 50;
+    private static final int MIN_QUALITY = 0;
+    private static final int INCREASE_QUALITY_TEN_DAY_LIMIT = 11;
+    private static final int INCREASE_QUALITY_FIVE_DAY_LIMIT = 6;
+    private static final int SELLIN_MIN = 0;
     Item[] items;
 
     public GildedRose(Item[] items) {
@@ -37,27 +37,21 @@ class GildedRose {
                 incrementQuality(item);
                 updateBackstagePassesQuality(item, item.name);
             }
-        } else {
-            if (!isSulfuras(item.name)) {
-                decrementNotMinimumQuality(item);
-            }
-
+        } else if (!isSulfuras(item.name)) {
+            decrementNotMinimumQuality(item);
         }
+
 
         if (item.sellIn < SELLIN_MIN) {
             if (isAgedBrie(item.name)) {
                 if (item.quality < MAX_QUALITY) {
                     incrementQuality(item);
                 }
-            } else {
-                if (isBackstagePasses(item.name))
-                    resetQuality(item);
-
-                if (!isBackstagePasses(item.name) && !isSulfuras(item.name)) {
-                    decrementNotMinimumQuality(item);
-                }
+            } else if (isBackstagePasses(item.name)) {
+                resetQuality(item);
+            } else if (!isSulfuras(item.name)) {
+                decrementNotMinimumQuality(item);
             }
-
         }
     }
 
